@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{% if order %}Edit Order #{{ order.id }}{% else %}New Order{% endif %}{% endblock %}
+
+{% block content %}
+<h2 class="mb-1">{% if order %}Edit Order #{{ order.id }}{% else %}New Order{% endif %}</h2>
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <h3 class="mt-1 mb-1">Order Items</h3>
+        {{ formset.management_form }}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item_form in formset %}
+                <tr>
+                    <td>{{ item_form.product }}</td>
+                    <td>{{ item_form.quantity }}</td>
+                    <td>{{ item_form.price }}</td>
+                    <td>{{ item_form.DELETE }}</td>
+                    {{ item_form.id }}
+                    {{ item_form.order }}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="button" class="btn btn-secondary mt-1" id="add-item">Add Item</button>
+
+        <div class="mt-1">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'order_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById("add-item").addEventListener("click", function() {
+    const tbody = document.querySelector("table tbody");
+    const totalForms = document.getElementById("id_items-TOTAL_FORMS");
+    const n = parseInt(totalForms.value);
+
+    // Clone the last row and clear its values
+    const lastRow = tbody.querySelector("tr:last-child");
+    const newRow = lastRow.cloneNode(true);
+
+    newRow.querySelectorAll("input, select").forEach(el => {
+        el.name = el.name.replace(/-\d+-/, `-${n}-`);
+        el.id = el.id.replace(/-\d+-/, `-${n}-`);
+        if (el.type === "checkbox") el.checked = false;
+        else el.value = "";
+    });
+
+    tbody.appendChild(newRow);
+    totalForms.value = n + 1;
+});
+</script>
+{% endblock %}

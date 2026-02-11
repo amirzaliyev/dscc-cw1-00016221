@@ -1,0 +1,23 @@
+.git
+.gitignore
+.dockerignore
+.venv
+.env
+.env.postgres
+.python-version
+
+__pycache__
+*.py[oc]
+*.egg-info
+
+*.db
+
+docker-compose.yaml
+Dockerfile
+traefik.yaml
+
+uv.lock
+pyproject.toml
+
+README.md
+Coursework 1 DSCC.pdf

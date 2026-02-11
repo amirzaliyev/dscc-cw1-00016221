@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-1">Order #{{ order.id }}</h2>
+
+<div class="card">
+    <dl class="detail-grid">
+        <dt>Customer</dt>
+        <dd>{{ order.customer|default:"—" }}</dd>
+        <dt>Total Amount</dt>
+        <dd>{{ order.total_amount }}</dd>
+        <dt>Created</dt>
+        <dd>{{ order.created_at|date:"d M Y H:i" }}</dd>
+    </dl>
+</div>
+
+<h3 class="mb-1 mt-1">Items</h3>
+{% if order.items.all %}
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.product }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="card"><p>No items in this order.</p></div>
+{% endif %}
+
+<div class="mt-1">
+    <a href="{% url 'order_update' order.pk %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'order_delete' order.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'order_list' %}" class="btn btn-primary">Back to Orders</a>
+</div>
+{% endblock %}
