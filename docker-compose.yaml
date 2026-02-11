@@ -14,7 +14,7 @@ services:
       sales-net: {}
 
   postgresql:
-    image: postgresql:16
+    image: postgres:16
     container_name: postgresql
     env_file:
       - .env.postgres
@@ -50,6 +50,13 @@ services:
       postgresql:
         condition: service_healthy
     restart: unless-stopped
+    command: 
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 3 &&
+        python3 manage.py migrate &&
+        gunicorn config.wsgi:application -b 0.0.0.0:8000 -w 4
+      "
     networks:
       database: {}
       sales-net: {}
