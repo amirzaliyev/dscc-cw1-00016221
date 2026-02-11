@@ -15,3 +15,4 @@ wheels/
 .env.postgres
 Coursework 1 DSCC.pdf
 staticfiles/
+.pytest_cache/

@@ -3,13 +3,19 @@ from typing import Any
 from django.contrib import admin
 from django.http import HttpRequest
 
-from sales.models import Customer, Order, OrderItem, Product
+from sales.models import Customer, Order, OrderItem, Product, Tag
 
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
     model = Customer
     list_display = ["full_name", "phone_number", "is_vip"]
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    model = Tag
+    list_display = ["name"]
 
 
 @admin.register(Product)

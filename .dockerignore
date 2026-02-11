@@ -5,6 +5,7 @@
 .env
 .env.postgres
 .python-version
+.pytest_cache
 
 __pycache__
 *.py[oc]
