@@ -18,6 +18,7 @@ traefik.yaml
 
 uv.lock
 pyproject.toml
+collectstatic
 
 README.md
 Coursework 1 DSCC.pdf

@@ -8,6 +8,7 @@ from django.db.models import (
     DecimalField,
     ForeignKey,
     IntegerField,
+    ManyToManyField,
     Model,
 )
 
@@ -24,9 +25,14 @@ class Customer(Model):
         return f"<User(full_name={self.full_name}, phone_number={self.phone_number})>"
 
 
+class Tag(Model):
+    name = CharField(max_length=255)
+
+
 class Product(Model):
     name = CharField(max_length=255)
     sku_code = CharField(max_length=30)
+    tags = ManyToManyField("sales.Tag", related_name="products", blank=True)
 
     def __str__(self) -> str:
         return f"{self.name} {self.sku_code}"

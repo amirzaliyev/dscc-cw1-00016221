@@ -57,6 +57,9 @@ services:
         python3 manage.py migrate &&
         gunicorn config.wsgi:application -b 0.0.0.0:8000 -w 4
       "
+    volumes:
+      - static_files:/app/static_files
+      - media_files:/app/media
     networks:
       database: {}
       sales-net: {}
@@ -64,6 +67,8 @@ services:
 volumes:
   postgres_data:
   letsencrypt:
+  static_files:
+  media_files:
 
 networks:
   sales-net:
