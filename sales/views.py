@@ -41,7 +41,9 @@ def create_order(request: HttpRequest):
             order = form.save()
             formset.instance = order
             formset.save()
-            order.total_amount = sum(item.price * item.quantity for item in order.items)
+            order.total_amount = sum(
+                item.price * item.quantity for item in order.items.all()
+            )
             order.save()
             return redirect("order_list")
     else:
@@ -68,6 +70,10 @@ def update_order(request: HttpRequest, pk: int):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
+            order.total_amount = sum(
+                item.price * item.quantity for item in order.items.all()
+            )
+            order.save()
             return redirect("order_detail", pk=pk)
     else:
         form = OrderForm(instance=order)
