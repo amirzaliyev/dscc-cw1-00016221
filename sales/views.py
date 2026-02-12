@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.http.request import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 
-from sales.forms import OrderForm, OrderItemFormSet
+from sales.forms import CustomerForm, OrderForm, OrderItemFormSet
 from sales.models import Order
 
 # def register(request: HttpRequest):
@@ -83,3 +84,14 @@ def delete_order(request: HttpRequest, pk: int):
         return redirect("order_list")
 
     return render(request, "sales/order_confirm_delete.html", context={"order": order})
+
+
+@login_required
+def create_customer(request: HttpRequest):
+    if request.method == "POST":
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            customer = form.save()
+            return JsonResponse({"id": customer.id, "name": str(customer)})
+        return JsonResponse({"errors": form.errors}, status=400)
+    return JsonResponse({"error": "POST required"}, status=405)
