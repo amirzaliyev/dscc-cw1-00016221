@@ -33,9 +33,7 @@ services:
       database: {}
 
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: amirzadocker/sales-manager:latest
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=Host(`16221.wiut911.uz`)"
