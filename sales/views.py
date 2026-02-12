@@ -42,6 +42,7 @@ def create_order(request: HttpRequest):
             formset.instance = order
             formset.save()
             order.total_amount = sum(item.price * item.quantity for item in order.items)
+            order.save()
             return redirect("order_list")
     else:
         form = OrderForm()
