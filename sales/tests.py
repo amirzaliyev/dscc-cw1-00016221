@@ -50,8 +50,12 @@ def test_product_tag_m2m(product):
 
 
 def test_order_total_calculation(order, product):
-    OrderItem.objects.create(order=order, product=product, quantity=2, price=Decimal("100.00"))
-    OrderItem.objects.create(order=order, product=product, quantity=1, price=Decimal("50.00"))
+    OrderItem.objects.create(
+        order=order, product=product, quantity=2, price=Decimal("100.00")
+    )
+    OrderItem.objects.create(
+        order=order, product=product, quantity=1, price=Decimal("50.00")
+    )
     total = sum(item.quantity * item.price for item in order.items.all())
     assert total == Decimal("250.00")
 
