@@ -6,3 +6,5 @@ DATABASES = {
         "NAME": ":memory:",
     }
 }
+
+SECRET_KEY = "very-not-secure-test-secret-key"
