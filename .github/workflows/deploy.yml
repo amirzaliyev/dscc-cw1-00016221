@@ -18,7 +18,7 @@ jobs:
         run: pip install -r requirements.txt pytest pytest-django
 
       - name: Run code quality check
-        run: python -m py_compile manage.py && black --check .
+        run: python3 -m py_compile manage.py && black --check .
 
       - name: Run tests
         run: pytest -v
