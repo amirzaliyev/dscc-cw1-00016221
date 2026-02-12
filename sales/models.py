@@ -28,6 +28,12 @@ class Customer(Model):
 class Tag(Model):
     name = CharField(max_length=255)
 
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return f"<Tag(name={self.name})>"
+
 
 class Product(Model):
     name = CharField(max_length=255)
