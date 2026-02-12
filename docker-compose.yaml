@@ -3,6 +3,7 @@ services:
   traefik:
     image: traefik:v3.6
     container_name: traefik
+    restart: unless-stopped
     ports:
       - '80:80'
       - '443:443'
@@ -41,6 +42,7 @@ services:
       - "traefik.http.routers.web.entrypoints=websecure"
       - "traefik.http.routers.web.tls.certresolver=letsencrypt"
       - "traefik.http.services.web.loadbalancer.server.port=8000"
+      - "traefik.docker.network=dscc-cw1-00016221_sales-net"
     container_name: web
     ports:
       - '8000:8000'
@@ -55,6 +57,7 @@ services:
         echo 'Waiting for database...' &&
         sleep 3 &&
         python3 manage.py migrate &&
+        rm -rf staticfiles/ &&
         python3 manage.py collectstatic &&
         gunicorn config.wsgi:application -b 0.0.0.0:8000 -w 4
       "

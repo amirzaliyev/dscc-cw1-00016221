@@ -13,8 +13,7 @@ certificatesResolvers:
     acme:
       email: 16221@wiut.uz
       storage: /letsencrypt/acme.json
-      httpChallenge:
-        entryPoint: web
+      tlsChallenge: {}
 
 providers:
   docker:
