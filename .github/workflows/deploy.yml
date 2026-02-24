@@ -28,10 +28,10 @@ jobs:
         run: pip install -r requirements.txt pytest pytest-django
 
       - name: Run code quality check
-        run: python3 -m py_compile manage.py && black --check .
+        run: python3 -m py_compile backend/manage.py && black --check ./backend
 
       - name: Run tests
-        run: pytest sales/tests.py -v
+        run: pytest backend/sales/tests.py -v
 
   build-and-push:
     runs-on: ubuntu-latest
