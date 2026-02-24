@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center;" class="mb-1">
+    <h2>Orders</h2>
+    <a href="{% url 'order_create' %}" class="btn btn-primary">New Order</a>
+</div>
+
+{% if order_list %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Total Amount</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in order_list %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customer|default:"—" }}</td>
+                <td>{{ order.total_amount }}</td>
+                <td>{{ order.created_at|date:"d M Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'order_detail' order.pk %}" class="btn btn-primary">View</a>
+                    <a href="{% url 'order_update' order.pk %}" class="btn btn-secondary">Edit</a>
+                    <a href="{% url 'order_delete' order.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="card">
+        <p>No orders yet. <a href="{% url 'order_create' %}">Create one</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
