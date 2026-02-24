@@ -16,7 +16,6 @@ dependencies = [
     "sqlparse==0.5.5",
     "types-pyyaml==6.0.12.20250915",
     "typing-extensions==4.15.0",
-    "whitenoise>=6.11.0",
     "pytest>=8.0",
     "pytest-django>=4.9",
     "black>=26.1.0",
