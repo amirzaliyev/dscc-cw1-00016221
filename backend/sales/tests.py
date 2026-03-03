@@ -104,11 +104,14 @@ def test_register_page_loads():
 
 def test_register_creates_user(db):
     c = Client()
-    response = c.post("/accounts/register/", {
-        "username": "newuser",
-        "password1": "Str0ngPass!99",
-        "password2": "Str0ngPass!99",
-    })
+    response = c.post(
+        "/accounts/register/",
+        {
+            "username": "newuser",
+            "password1": "Str0ngPass!99",
+            "password2": "Str0ngPass!99",
+        },
+    )
     assert response.status_code == 302
     assert User.objects.filter(username="newuser").exists()
 
