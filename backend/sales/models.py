@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db.models import (
     CASCADE,
     RESTRICT,
@@ -52,6 +53,9 @@ class Order(Model):
     created_at = DateTimeField(auto_now_add=True)
     customer = ForeignKey(
         "sales.Customer", on_delete=SET_NULL, related_name="orders", null=True
+    )
+    created_by = ForeignKey(
+        get_user_model(), on_delete=SET_NULL, related_name="orders", null=True
     )
 
     def __str__(self) -> str:
