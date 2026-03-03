@@ -3,20 +3,20 @@ from django.http import JsonResponse
 from django.http.request import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 
-from sales.forms import CustomerForm, OrderForm, OrderItemFormSet
+from sales.forms import CustomerForm, OrderForm, OrderItemFormSet, RegistrationForm
 from sales.models import Order
 
-# def register(request: HttpRequest):
-#     if request.method == "POST":
-#         form = RegistrationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("login")
-#
-#     else:
-#         form = RegistrationForm()
-#
-#     return render(request, "registration/register.html", context={"form": form})
+
+def register(request: HttpRequest):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+    else:
+        form = RegistrationForm()
+
+    return render(request, "registration/register.html", context={"form": form})
 
 
 @login_required
@@ -27,7 +27,7 @@ def home(request: HttpRequest):
 
 @login_required
 def list_orders(request: HttpRequest):
-    context = {"order_list": Order.objects.all()}
+    context = {"order_list": Order.objects.filter(created_by=request.user)}
     return render(request, "sales/order_list.html", context)
 
 
@@ -38,7 +38,9 @@ def create_order(request: HttpRequest):
         formset = OrderItemFormSet(request.POST)
 
         if form.is_valid() and formset.is_valid():
-            order = form.save()
+            order = form.save(commit=False)
+            order.created_by = request.user
+            order.save()
             formset.instance = order
             formset.save()
             order.total_amount = sum(
@@ -57,13 +59,13 @@ def create_order(request: HttpRequest):
 
 @login_required
 def get_order(request: HttpRequest, pk: int):
-    order = get_object_or_404(Order, pk=pk)
+    order = get_object_or_404(Order, pk=pk, created_by=request.user)
     return render(request, "sales/order_detail.html", context={"order": order})
 
 
 @login_required
 def update_order(request: HttpRequest, pk: int):
-    order = get_object_or_404(Order, pk=pk)
+    order = get_object_or_404(Order, pk=pk, created_by=request.user)
     if request.method == "POST":
         form = OrderForm(request.POST, instance=order)
         formset = OrderItemFormSet(request.POST, instance=order)
@@ -86,7 +88,7 @@ def update_order(request: HttpRequest, pk: int):
 
 @login_required
 def delete_order(request: HttpRequest, pk: int):
-    order = get_object_or_404(Order, pk=pk)
+    order = get_object_or_404(Order, pk=pk, created_by=request.user)
     if request.method == "POST":
         order.delete()
         return redirect("order_list")
