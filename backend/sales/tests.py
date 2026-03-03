@@ -30,8 +30,8 @@ def product(db):
 
 
 @pytest.fixture
-def order(customer):
-    return Order.objects.create(customer=customer)
+def order(user, customer):
+    return Order.objects.create(customer=customer, created_by=user)
 
 
 # --- Model tests ---
@@ -94,3 +94,29 @@ def test_order_delete(client, order):
     response = client.post(f"/orders/{order.pk}/delete")
     assert response.status_code == 302
     assert not Order.objects.filter(pk=order.pk).exists()
+
+
+def test_register_page_loads():
+    c = Client()
+    response = c.get("/accounts/register/")
+    assert response.status_code == 200
+
+
+def test_register_creates_user(db):
+    c = Client()
+    response = c.post("/accounts/register/", {
+        "username": "newuser",
+        "password1": "Str0ngPass!99",
+        "password2": "Str0ngPass!99",
+    })
+    assert response.status_code == 302
+    assert User.objects.filter(username="newuser").exists()
+
+
+def test_order_isolation(user, customer, db):
+    other_user = User.objects.create_user(username="other", password="pass123")
+    other_order = Order.objects.create(customer=customer, created_by=other_user)
+    c = Client()
+    c.login(username="testuser", password="testpass123")
+    response = c.get(f"/orders/{other_order.pk}/")
+    assert response.status_code == 404
