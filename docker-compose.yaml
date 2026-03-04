@@ -29,7 +29,7 @@ services:
     env_file:
       - .env.postgres
     ports:
-      - '5876:5876'
+      - '5876:5432'
     healthcheck:
       test: ['CMD', 'pg_isready', '-U', 'sales_user', '-d', 'sales_db']
       interval: 10s
