@@ -5,8 +5,10 @@ A Django web application for managing sales orders, customers, and products. Bui
 ## Features
 
 - User authentication (login, logout, registration)
+- Per-user data isolation — each user only sees their own orders, customers, and products
 - Order management with full CRUD operations
 - Inline order items with dynamic row addition
+- On-the-fly customer and product creation directly from the order form
 - Auto-calculated order totals
 - Customer management with VIP flag
 - Product catalogue with tag support
@@ -14,6 +16,7 @@ A Django web application for managing sales orders, customers, and products. Bui
 - PostgreSQL database with persistent storage
 - Dockerized multi-service architecture (Django, PostgreSQL, Nginx, Certbot)
 - HTTPS with Let's Encrypt via Certbot
+- CI/CD pipeline via GitHub Actions (test → build → deploy)
 - Production-ready with Gunicorn
 
 ## Technologies
@@ -31,20 +34,24 @@ A Django web application for managing sales orders, customers, and products. Bui
 Customer
 ├── full_name (CharField)
 ├── phone_number (CharField)
-└── is_vip (BooleanField)
+├── is_vip (BooleanField)
+└── created_by (FK → User)
 
 Tag
-└── name (CharField)
+├── name (CharField)
+└── created_by (FK → User)
 
 Product
 ├── name (CharField)
 ├── sku_code (CharField)
-└── tags (ManyToManyField → Tag)
+├── tags (ManyToManyField → Tag)
+└── created_by (FK → User)
 
 Order
 ├── total_amount (DecimalField, auto-calculated)
 ├── created_at (DateTimeField)
-└── customer (FK → Customer)
+├── customer (FK → Customer)
+└── created_by (FK → User)
 
 OrderItem
 ├── product (FK → Product)
@@ -58,6 +65,7 @@ OrderItem
 - Order → OrderItem: one-to-many
 - Product → OrderItem: many-to-one
 - Product ↔ Tag: many-to-many
+- User → Customer / Product / Order: one-to-many (ownership / isolation)
 
 ## Screenshots
 

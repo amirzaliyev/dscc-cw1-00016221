@@ -3,6 +3,7 @@ from django.urls import path
 from sales.views import (
     create_customer,
     create_order,
+    create_product,
     delete_order,
     get_order,
     list_orders,
@@ -16,4 +17,5 @@ urlpatterns = [
     path("<int:pk>/update", update_order, name="order_update"),
     path("<int:pk>/delete", delete_order, name="order_delete"),
     path("customers/create", create_customer, name="customer_create"),
+    path("products/create", create_product, name="product_create"),
 ]
